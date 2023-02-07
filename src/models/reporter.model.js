@@ -1,4 +1,5 @@
 'use strict';
+const { admin } = require('../controllers/reporter.controller');
 var dbConn = require('./../../config/db.config');
 //Reporter object create
 var Reporter = function(reporter){
@@ -21,8 +22,10 @@ else{
 }
 });
 };
+
+
 Reporter.findById = function (id, result) {
-dbConn.query("Select * from reporters where id = ? ", id, function (err, res) {
+dbConn.query("Select * from logins where id = ? ", id, function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(err, null);
@@ -54,6 +57,25 @@ if(err) {
 }
 });
 };
+
+// Reporter.select = function(id, Logins, result){
+// check_user =  dbConn.query("SELECT FROM logins WHERE email=?, password=?", [Logins.email, Logins.password], function (err, res) {
+// if(check_user.length <= 0) {
+//   // console.log("error: ", err);
+//   // result(null, err);
+//   const status = 403;
+//   const message = "DEFAULT"
+//   return{
+//     status,
+//     message
+//   }
+// }else{
+//   result(null, res);
+// }
+
+//   });
+// };
+
 Reporter.delete = function(id, result){
 dbConn.query("DELETE FROM reporters WHERE id = ?", [id], function (err, res) {
 if(err) {
@@ -65,6 +87,8 @@ else{
 }
 });
 };
+
+
 module.exports= Reporter;
 
 

@@ -1,3 +1,5 @@
+const cors=require('cors');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 // create express app
@@ -9,8 +11,16 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
 // define a root route
+app.use(cors())
+
+//making cors available for different servers
+// const cors = require('cors');
+// app.use(cors({
+//     origin: ['https://www.section.io', 'https://www.google.com/']
+// }));
 app.get('/', (req, res) => {
   res.send("Hello World");
+  
 });
 // Require incidence routes
 const incidenceRoutes = require('./src/routes/incidence.routes')
@@ -19,10 +29,13 @@ app.use('/api/v1/incidences', incidenceRoutes)
 
 // repoters details begin
 // Require reporters routes
-const reporterRoutes = require('./src/routes/reporter.routes')
-// using as middleware
-app.use('/api/v1/reporters', reporterRoutes)
-// reporters details end
+// const reporterRoutes = require('./src/routes/reporter.routes')
+// // using as middleware
+// app.use('/api/v1/reporters', reporterRoutes)
+// // reporters details end
+
+const loginRoutes = require('./src/routes/login.routes')
+app.use('/api/v1/login', loginRoutes)
 
 // listen for requests
 app.listen(port, () => {

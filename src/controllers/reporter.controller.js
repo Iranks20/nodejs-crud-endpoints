@@ -40,6 +40,21 @@ exports.update = function(req, res) {
 });
 }
 };
+// logging in
+// exports.select = function(req, res) {
+//   const log_in = new Reporter(req.body);
+//   if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+//     res.status(400).send({ error:true, message: 'Please provide all login details' });
+//   }else{
+//   Reporter.select(log_in, function(err, reporter) {
+//     if (err)
+//     res.send(err);
+//     res.json({error:false,message:"admin logged in successfullty!",data:reporter});
+//   });
+//   }
+//   };
+// logging in
+
 exports.delete = function(req, res) {
 Reporter.delete( req.params.id, function(err, reporter) {
   if (err)
@@ -47,4 +62,5 @@ Reporter.delete( req.params.id, function(err, reporter) {
   res.json({ error:false, message: 'reporter successfully deleted' });
 });
 };
+
 
