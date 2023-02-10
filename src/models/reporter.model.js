@@ -46,6 +46,49 @@ else{
 }
 });
 };
+
+// daily reporters
+Reporter.dailyReporterz = function (result) {
+  dbConn.query("SELECT * FROM `reporters` WHERE datetime >= curdate()", function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+    console.log('reporters : ', res);
+    result(null, res);
+  }
+  });
+  };
+
+// weekly reporters
+Reporter.weeklyReporterz = function (result) {
+  dbConn.query("select * from reporters where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+    console.log('reporters : ', res);
+    result(null, res);
+  }
+  });
+  };
+
+// monthly reporters
+Reporter.monthlyReporterz = function (result) {
+  dbConn.query("SELECT * FROM `reporters` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+    console.log('reporters : ', res);
+    result(null, res);
+  }
+  });
+  };
+
 Reporter.update = function(id, Reporter, result){
 dbConn.query("UPDATE reporters SET first_name=?,last_name=?,email=?,sex=?,phone_number=? WHERE id = ?", [Reporter.first_name,Reporter.last_name,Reporter.email,Reporter.sex,Reporter.phone_number, id], function (err, res) {
 if(err) {

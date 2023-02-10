@@ -9,6 +9,39 @@ Reporter.findAll(function(err, reporter) {
   res.send(reporter);
 });
 };
+
+// dialy reports
+exports.dailyReporterz = function(req, res) {
+  Reporter.dailyReporterz(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', reporter);
+    res.send(reporter);
+  });
+  };
+
+//weekly reporters
+exports.weeklyReporterz = function(req, res) {
+  Reporter.weeklyReporterz(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', reporter);
+    res.send(reporter);
+  });
+  };
+
+//monthly reporterz
+exports.monthlyReporterz = function(req, res) {
+  Reporter.monthlyReporterz(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', reporter);
+    res.send(reporter);
+  });
+  }; 
 exports.create = function(req, res) {
 const new_reporter = new Reporter(req.body);
 //handles null error
