@@ -6,8 +6,7 @@ const reporterController =   require('../controllers/reporter.controller');
 // // Create a new reporter
  router.post('/', reporterController.create);
 
-//  log in
-router.post('/login', reporterController.select);
+
 
 // // Retrieve a single reporter with id
  router.get('/:id', reporterController.findById);

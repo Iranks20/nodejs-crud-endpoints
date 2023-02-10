@@ -5,9 +5,7 @@ var Incidence = function(incidence){
   this.incident     = incidence.incident;
   this.location      = incidence.location;
   this.cordinates          = incidence.cordinates;
-  this.time          = incidence.time;
-  this.date   = incidence.date;
-  this.by_who    = incidence.by_who;
+  this.by_who          = incidence.by_who;
   this.to_whom         = incidence.to_whom;
   this.details         = incidence.details
 
@@ -35,6 +33,8 @@ else{
 }
 });
 };
+
+// all incidences
 Incidence.findAll = function (result) {
 dbConn.query("Select * from incidences", function (err, res) {
 if(err) {
@@ -47,6 +47,52 @@ else{
 }
 });
 };
+// dialy incidences
+Incidence.dailyIncident = function (result) {
+  dbConn.query("SELECT * FROM `incidences` WHERE datetime >= curdate()", function (err, res) { 
+if(err) {
+  console.log("error: ", err);
+  result(null, err);
+}
+else{
+  console.log('incidences : ', res);
+  result(null, res);
+}
+});
+};
+
+// weekly incidences
+Incidence.weeklyIncident = function (result) {
+  dbConn.query("select * from incidences where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) { 
+// dbConn.query("Select * from incidences", function (err, res) {
+if(err) {
+  console.log("error: ", err);
+  result(null, err);
+}
+else{
+  console.log('incidences : ', res);
+  result(null, res);
+}
+});
+};
+
+// monthly incidence
+Incidence.monthlyIncident = function (result) {
+  dbConn.query("SELECT * FROM `incidences` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) { 
+// dbConn.query("Select * from incidences", function (err, res) {
+if(err) {
+  console.log("error: ", err);
+  result(null, err);
+}
+else{
+  console.log('incidences : ', res);
+  result(null, res);
+}
+});
+};
+
+// incidence record end
+
 Incidence.update = function(id, incidence, result){
 dbConn.query("UPDATE incidences SET incident=?,location=?,cordinates=?,time=?,date=?,by_who=?,to_whom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.time,incidence.date,incidence.by_who,incidence.to_whom,incidence.incident, id], function (err, res) {
 if(err) {

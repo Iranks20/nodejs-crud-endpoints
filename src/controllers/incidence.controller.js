@@ -9,6 +9,39 @@ Incidence.findAll(function(err, incidence) {
   res.send(incidence);
 });
 };
+
+// daily incidences
+exports.dailyIncident = function(req, res) {
+  Incidence.dailyIncident(function(err, incidence) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', incidence);
+    res.send(incidence);
+  });
+  };
+// weekly incidences
+exports.weeklyIncident = function(req, res) {
+  Incidence.weeklyIncident(function(err, incidence) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', incidence);
+    res.send(incidence);
+  });
+  };
+// monthly incidences
+exports.monthlyIncident = function(req, res) {
+  Incidence.monthlyIncident(function(err, incidence) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', incidence);
+    res.send(incidence);
+  });
+  };
+
+
 exports.create = function(req, res) {
 const new_incidence = new Incidence(req.body);
 //handles null error
