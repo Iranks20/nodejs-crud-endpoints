@@ -47,6 +47,21 @@ else{
 }
 });
 };
+
+// count of all incidences
+Incidence.findAllCounts = function (result) {
+  dbConn.query("SELECT COUNT(id) AS FROM incidences", function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+    console.log('incidences : ', res);
+    result(null, res);
+  }
+  });
+  };
+
 // dialy incidences
 Incidence.dailyIncident = function (result) {
   dbConn.query("SELECT * FROM `incidences` WHERE datetime >= curdate()", function (err, res) { 

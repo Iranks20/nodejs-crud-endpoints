@@ -10,6 +10,17 @@ Incidence.findAll(function(err, incidence) {
 });
 };
 
+// count of all incidences
+exports.findAllCounts = function(req, res) {
+  Incidence.findAllCounts(function(err, incidence) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', incidence);
+    res.send(incidence);
+  });
+  };
+
 // daily incidences
 exports.dailyIncident = function(req, res) {
   Incidence.dailyIncident(function(err, incidence) {
@@ -20,6 +31,7 @@ exports.dailyIncident = function(req, res) {
     res.send(incidence);
   });
   };
+
 // weekly incidences
 exports.weeklyIncident = function(req, res) {
   Incidence.weeklyIncident(function(err, incidence) {

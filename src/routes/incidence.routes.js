@@ -3,6 +3,9 @@ const router = express.Router()
 const incidenceController =   require('../controllers/incidence.controller');
 // Retrieve all incidences
 router.get('/', incidenceController.findAll);
+// count of all incidences
+router.get('/countall', incidenceController.findAll);
+
 // retrieve daily incidence
 router.get('/daily', incidenceController.dailyIncident);
 // retrieve weekly incidence
