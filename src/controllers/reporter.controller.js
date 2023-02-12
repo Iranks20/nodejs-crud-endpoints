@@ -10,6 +10,18 @@ Reporter.findAll(function(err, reporter) {
 });
 };
 
+// counting all reporters
+exports.countAllReporters = function(req, res) {
+  Reporter.countAllReporters(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', JSON.stringify(reporter));
+    res.send(JSON.stringify(reporter));
+    return;
+  });
+  };
+
 // dialy reports
 exports.dailyReporterz = function(req, res) {
   Reporter.dailyReporterz(function(err, reporter) {
@@ -18,6 +30,18 @@ exports.dailyReporterz = function(req, res) {
     res.send(err);
     console.log('res', reporter);
     res.send(reporter);
+  });
+  };
+
+// counting daily reporters
+exports.countDailyReporters = function(req, res) {
+  Reporter.countDailyReporters(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', JSON.stringify(reporter));
+    res.send(JSON.stringify(reporter));
+    return;
   });
   };
 
@@ -31,6 +55,16 @@ exports.weeklyReporterz = function(req, res) {
     res.send(reporter);
   });
   };
+// counting weekly reporters
+exports.countWeeklyReporters = function(req, res) {
+  Reporter.countWeeklyReporters(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', JSON.stringify(reporter));
+    res.send(JSON.stringify(reporter));
+  });
+  };
 
 //monthly reporterz
 exports.monthlyReporterz = function(req, res) {
@@ -42,6 +76,17 @@ exports.monthlyReporterz = function(req, res) {
     res.send(reporter);
   });
   }; 
+// counting monthly reporters
+exports.countMonthlyReporters = function(req, res) {
+  Reporter.countMonthlyReporters(function(err, reporter) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', JSON.stringify(reporter));
+    res.send(JSON.stringify(reporter));
+  });
+  };
+
 exports.create = function(req, res) {
 const new_reporter = new Reporter(req.body);
 //handles null error

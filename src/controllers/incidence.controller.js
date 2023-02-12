@@ -16,8 +16,9 @@ exports.findAllCounts = function(req, res) {
     console.log('controller')
     if (err)
     res.send(err);
-    console.log('res', incidence);
-    res.send(incidence);
+    console.log('resss', JSON.stringify(incidence));
+    res.send(JSON.stringify(incidence));
+    return;
   });
   };
 
@@ -32,6 +33,17 @@ exports.dailyIncident = function(req, res) {
   });
   };
 
+// counting daily incidents
+exports.dailyIncidentCounts = function(req, res) {
+  Incidence.dailyIncidentCounts(function(err, incidence) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', JSON.stringify(incidence));
+    res.send(JSON.stringify(incidence));   
+  });
+  };
+
 // weekly incidences
 exports.weeklyIncident = function(req, res) {
   Incidence.weeklyIncident(function(err, incidence) {
@@ -42,6 +54,18 @@ exports.weeklyIncident = function(req, res) {
     res.send(incidence);
   });
   };
+
+  // weekly incidence counts
+  exports.weeklyIncidentCounts = function(req, res) {
+    Incidence.weeklyIncidentCounts(function(err, incidence) {
+      console.log('controller')
+      if (err)
+      res.send(err);
+      console.log('res', JSON.stringify(incidence));
+      res.send(JSON.stringify(incidence));   
+    });
+    };
+
 // monthly incidences
 exports.monthlyIncident = function(req, res) {
   Incidence.monthlyIncident(function(err, incidence) {
@@ -53,6 +77,16 @@ exports.monthlyIncident = function(req, res) {
   });
   };
 
+// monthly incident counts
+exports.monthlyIncidentCounts = function(req, res) {
+  Incidence.monthlyIncidentCounts(function(err, incidence) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', JSON.stringify(incidence));
+    res.send(JSON.stringify(incidence));   
+  });
+  };
 
 exports.create = function(req, res) {
 const new_incidence = new Incidence(req.body);

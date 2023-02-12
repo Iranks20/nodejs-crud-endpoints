@@ -50,14 +50,14 @@ else{
 
 // count of all incidences
 Incidence.findAllCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS FROM incidences", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS number_workers FROM incidences;", function (err, res) {
   if(err) {
-    console.log("error: ", err);
+     console.log("error: ", err);
     result(null, err);
   }
   else{
-    console.log('incidences : ', res);
-    result(null, res);
+     console.log('incidencessss : ', JSON.stringify(res));
+     result(null, res);
   }
   });
   };
@@ -76,10 +76,23 @@ else{
 });
 };
 
+// counting daily incidences
+Incidence.dailyIncidentCounts = function (result) {
+  dbConn.query("SELECT COUNT(id) AS numbe_workers FROM incidences WHERE datetime >= curdate();", function (err, res) {
+  if(err) {
+     console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+     console.log('incidencessss : ', JSON.stringify(res));
+     result(null, res);
+  }
+  });
+  };
+
 // weekly incidences
 Incidence.weeklyIncident = function (result) {
   dbConn.query("select * from incidences where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) { 
-// dbConn.query("Select * from incidences", function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -90,6 +103,20 @@ else{
 }
 });
 };
+
+// counting weekly incidence
+Incidence.weeklyIncidentCounts = function (result) {
+  dbConn.query("SELECT COUNT(id) AS number_workers FROM incidences where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+  if(err) {
+     console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+     console.log('incidence : ', JSON.stringify(res));
+     result(null, res);
+  }
+  });
+  };
 
 // monthly incidence
 Incidence.monthlyIncident = function (result) {
@@ -105,6 +132,20 @@ else{
 }
 });
 };
+
+// monthly incident count
+Incidence.monthlyIncidentCounts = function (result) {
+  dbConn.query("SELECT COUNT(id) AS number_workers FROM incidences WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  if(err) {
+     console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+     console.log('incidence : ', JSON.stringify(res));
+     result(null, res);
+  }
+  });
+  };
 
 // incidence record end
 

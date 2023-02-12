@@ -9,6 +9,7 @@ var Reporter = function(reporter){
     this.phone_number   = reporter.phone_number;
 
 };
+// create report
 Reporter.create = function (newEmp, result) {
 dbConn.query("INSERT INTO reporters set ?", newEmp, function (err, res) {
 if(err) {
@@ -22,7 +23,7 @@ else{
 });
 };
 
-
+// find report by id
 Reporter.findById = function (id, result) {
 dbConn.query("Select * from logins where id = ? ", id, function (err, res) {
 if(err) {
@@ -34,6 +35,8 @@ else{
 }
 });
 };
+
+// find all reports
 Reporter.findAll = function (result) {
 dbConn.query("Select * from reporters", function (err, res) {
 if(err) {
@@ -47,6 +50,20 @@ else{
 });
 };
 
+// counting all reports
+Reporter.countAllReporters = function (result) {
+  dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters;", function (err, res) {
+  if(err) {
+     console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+     console.log('incidencessss : ', JSON.stringify(res));
+     result(null, res);
+  }
+  });
+  };
+
 // daily reporters
 Reporter.dailyReporterz = function (result) {
   dbConn.query("SELECT * FROM `reporters` WHERE datetime >= curdate()", function (err, res) {
@@ -57,6 +74,19 @@ Reporter.dailyReporterz = function (result) {
   else{
     console.log('reporters : ', res);
     result(null, res);
+  }
+  });
+  };
+// counting daily reports
+Reporter.countDailyReporters = function (result) {
+  dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters WHERE datetime >= curdate()", function (err, res) {
+  if(err) {
+     console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+     console.log('reporters : ', JSON.stringify(res));
+     result(null, res);
   }
   });
   };
@@ -74,6 +104,19 @@ Reporter.weeklyReporterz = function (result) {
   }
   });
   };
+  // counting weekly reporters
+  Reporter.countWeeklyReporters = function (result) {
+    dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+      if(err) {
+       console.log("error: ", err);
+      result(null, err);
+    }
+    else{
+       console.log('reporters : ', JSON.stringify(res));
+       result(null, res);
+    }
+    });
+    };
 
 // monthly reporters
 Reporter.monthlyReporterz = function (result) {
@@ -85,6 +128,19 @@ Reporter.monthlyReporterz = function (result) {
   else{
     console.log('reporters : ', res);
     result(null, res);
+  }
+  });
+  };
+// counting monthly reporters
+Reporter.countMonthlyReporters = function (result) {
+  dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  if(err) {
+     console.log("error: ", err);
+    result(null, err);
+  }
+  else{
+     console.log('reporters : ', JSON.stringify(res));
+     result(null, res);
   }
   });
   };

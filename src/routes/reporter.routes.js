@@ -2,13 +2,26 @@ const express = require('express')
 const router = express.Router()
 const reporterController =   require('../controllers/reporter.controller');
 // Retrieve all reporters
- router.get('/', reporterController.findAll);
+router.get('/', reporterController.findAll);
+// count all 
+router.get('/allreporters', reporterController.countAllReporters);
+
 //  daily reporterz
 router.get('/daily', reporterController.dailyReporterz);
+// count daily reporters
+router.get('/dailycounts', reporterController.countDailyReporters);
+
 // weekly reporterz
 router.get('/weekly', reporterController.weeklyReporterz);
+// counting weekly reporters
+router.get('/weeklycounts', reporterController.countWeeklyReporters);
+
+
 // monthly reporterz
 router.get('/monthly', reporterController.monthlyReporterz);
+// counting monthly reporters
+router.get('/monthlycounts', reporterController.countMonthlyReporters);
+
 // // Create a new reporter
  router.post('/', reporterController.create);
 
