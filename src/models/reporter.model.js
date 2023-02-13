@@ -52,7 +52,7 @@ else{
 
 // counting all reports
 Reporter.countAllReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters;", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS countall_reporters FROM reporters;", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -79,7 +79,7 @@ Reporter.dailyReporterz = function (result) {
   };
 // counting daily reports
 Reporter.countDailyReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters WHERE datetime >= curdate()", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS countdaily_reporters FROM reporters WHERE datetime >= curdate()", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -106,7 +106,7 @@ Reporter.weeklyReporterz = function (result) {
   };
   // counting weekly reporters
   Reporter.countWeeklyReporters = function (result) {
-    dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+    dbConn.query("SELECT COUNT(id) AS countweekly_reporters FROM reporters where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
       if(err) {
        console.log("error: ", err);
       result(null, err);
@@ -133,7 +133,7 @@ Reporter.monthlyReporterz = function (result) {
   };
 // counting monthly reporters
 Reporter.countMonthlyReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS number_reporterzz FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS countmonthly_reporters FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);

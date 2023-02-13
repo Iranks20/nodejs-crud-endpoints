@@ -97,7 +97,7 @@ if(req.body.constructor === Object && Object.keys(req.body).length === 0){
 Incidence.create(new_incidence, function(err, incidence) {
   if (err)
   res.send(err);
-  res.json({error:false,message:"incidence added successfully!",data:incidence});
+  res.json({error:false,message:"Thank you for submitting yut incidence successfully a memebr from our team will get back to you soon!",data:incidence});
 });
 }
 };
