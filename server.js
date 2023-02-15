@@ -27,12 +27,14 @@ const incidenceRoutes = require('./src/routes/incidence.routes')
 // using as middleware
 app.use('/api/v1/incidences', incidenceRoutes)
 
-// repoters details begin
 // Require reporters routes
 const reporterRoutes = require('./src/routes/reporter.routes')
 // // using as middleware
 app.use('/api/v1/reporters', reporterRoutes)
-// // reporters details end
+
+// login details
+const loginRoutes = require('./src/routes/login.routes')
+app.use('/api/v1/login', loginRoutes)
 
 
 // listen for requests
