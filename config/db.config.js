@@ -1,7 +1,7 @@
 'use strict';
 const mysql = require('mysql');
 // heroku mysql db connection
-const dbConn = mysql.createConnection({
+const dbConn = mysql.createPool({
   host     : "us-cdbr-east-06.cleardb.net",
   user     : "b409f650b51f57",
   password : "97683a12",
