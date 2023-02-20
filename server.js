@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const app = express();
 // Setup server port
 const port = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}.`);
+// });
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 // parse requests of content-type - application/json
