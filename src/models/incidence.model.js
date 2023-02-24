@@ -7,7 +7,7 @@ var Incidence = function(incidence){
   this.cordinates          = incidence.cordinates;
   this.by_who          = incidence.by_who;
   this.to_whom         = incidence.to_whom;
-  this.details         = incidence.details
+  // this.details         = incidence.details
 
 };
 Incidence.create = function (newRep, result) {
@@ -30,7 +30,7 @@ if(err) {
 }
 else{
   result(null, res);
-}
+} 
 });
 };
 
@@ -160,7 +160,8 @@ if(err) {
 });
 };
 Incidence.delete = function(id, result){
-dbConn.query("DELETE FROM incidences WHERE id = ?", [id], function (err, res) {
+// dbConn.query("DELETE FROM incidences WHERE id = ?", [id], function (err, res) {
+dbConn.query("DELETE a.*, b.* FROM incidences as a, reporters as b WHERE a.id = b.id AND a.id = ?;", [id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -170,4 +171,5 @@ else{
 }
 });
 };
+
 module.exports= Incidence;
