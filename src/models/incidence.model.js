@@ -150,7 +150,7 @@ Incidence.monthlyIncidentCounts = function (result) {
 // incidence record end
 
 Incidence.update = function(id, incidence, result){
-dbConn.query("UPDATE incidences SET incident=?,location=?,cordinates=?,time=?,date=?,by_who=?,to_whom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.time,incidence.date,incidence.by_who,incidence.to_whom,incidence.incident, id], function (err, res) {
+dbConn.query("UPDATE incidences SET incident=?,location=?,cordinates=?,by_who=?,to_whom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.by_who,incidence.to_whom,incidence.incident, id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
