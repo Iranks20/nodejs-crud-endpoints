@@ -118,6 +118,15 @@ exports.update = function(req, res) {
 });
 }
 };
+// updating on Read and Unread
+exports.updateById = function(req, res) {
+  Reporter.updateById(req.params.id, function(err) {
+    if (err)
+    res.send(err);
+    res.json({error:false, message: 'status read updated successfully'});
+  });
+  };
+
 
 exports.delete = function(req, res) {
 Reporter.delete( req.params.id, function(err, reporter) {

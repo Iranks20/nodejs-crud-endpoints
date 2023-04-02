@@ -31,4 +31,6 @@ router.get('/monthlycounts', reporterController.countMonthlyReporters);
  router.put('/:id', reporterController.update);
 // // Delete a reporter with id
  router.delete('/:id', reporterController.delete);
+ // updateById
+router.put('/status/:id', reporterController.updateById);
  module.exports = router

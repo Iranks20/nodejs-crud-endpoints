@@ -39,6 +39,11 @@ app.use('/api/v1/reporters', reporterRoutes)
 const loginRoutes = require('./src/routes/login.routes')
 app.use('/api/v1/login', loginRoutes)
 
+// Require users routes
+const usersRoutes = require('./src/routes/users.routes')
+// // using as middleware
+app.use('/api/v2/users', usersRoutes)
+
 
 // listen for requests
 app.listen(port, () => {

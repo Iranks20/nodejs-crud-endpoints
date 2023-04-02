@@ -5,8 +5,9 @@ var Incidence = function(incidence){
   this.incident     = incidence.incident;
   this.location      = incidence.location;
   this.cordinates          = incidence.cordinates;
-  this.by_who          = incidence.by_who;
-  this.to_whom         = incidence.to_whom;
+  this.byWho          = incidence.byWho;
+  this.toWhom         = incidence.toWhom;
+  this.status        = 'UnRead'
   // this.details         = incidence.details
 
 };
@@ -50,7 +51,7 @@ else{
 
 // count of all incidences
 Incidence.findAllCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS allincident_count FROM incidences;", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM incidences;", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -78,7 +79,7 @@ else{
 
 // counting daily incidences
 Incidence.dailyIncidentCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS dailyincident_count FROM incidences WHERE datetime >= curdate();", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM incidences WHERE datetime >= curdate();", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -92,7 +93,7 @@ Incidence.dailyIncidentCounts = function (result) {
 
 // weekly incidences
 Incidence.weeklyIncident = function (result) {
-  dbConn.query("select * from incidences where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) { 
+  dbConn.query("select * from incidences where week(datetime)=week(now())", function (err, res) { 
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -106,7 +107,7 @@ else{
 
 // counting weekly incidence
 Incidence.weeklyIncidentCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS weeklyincident_count FROM incidences where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM incidences where week(datetime)=week(now())", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -135,7 +136,7 @@ else{
 
 // monthly incident count
 Incidence.monthlyIncidentCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS monthlyincident_count FROM incidences WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM incidences WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -150,7 +151,7 @@ Incidence.monthlyIncidentCounts = function (result) {
 // incidence record end
 
 Incidence.update = function(id, incidence, result){
-dbConn.query("UPDATE incidences SET incident=?,location=?,cordinates=?,by_who=?,to_whom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.by_who,incidence.to_whom,incidence.incident, id], function (err, res) {
+dbConn.query("UPDATE incidences SET incident=?,location=?,cordinates=?,byWho=?,toWhom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.byWho,incidence.toWhom,incidence.incident, id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -159,6 +160,20 @@ if(err) {
 }
 });
 };
+
+// updating Unread to Read
+Incidence.updateById = function (id, result) {
+  dbConn.query("update incidences set status = 'Read' where id = ? ", id, function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(err, null);
+  }
+  else{
+    result(null, res);
+  } 
+  });
+  };
+
 Incidence.delete = function(id, result){
 // dbConn.query("DELETE FROM incidences WHERE id = ?", [id], function (err, res) {
 dbConn.query("DELETE a.*, b.* FROM incidences as a, reporters as b WHERE a.id = b.id AND a.id = ?;", [id], function (err, res) {

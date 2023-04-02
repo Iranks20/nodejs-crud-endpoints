@@ -2,11 +2,12 @@
 var dbConn = require('./../../config/db.config');
 //Reporter object create
 var Reporter = function(reporter){
-    this.first_name     = reporter.first_name;
-    this.last_name      = reporter.last_name;
+    this.firstName     = reporter.firstName;
+    this.lastName      = reporter.lastName;
     this.email          = reporter.email;
     this.sex          = reporter.sex;
-    this.phone_number   = reporter.phone_number;
+    this.phoneNumber   = reporter.phoneNumber;
+    this.status      = 'UnRead'
 
 };
 // create report
@@ -52,7 +53,7 @@ else{
 
 // counting all reports
 Reporter.countAllReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS countall_reporters FROM reporters;", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM reporters;", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -79,7 +80,7 @@ Reporter.dailyReporterz = function (result) {
   };
 // counting daily reports
 Reporter.countDailyReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS countdaily_reporters FROM reporters WHERE datetime >= curdate()", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM reporters WHERE datetime >= curdate()", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -93,7 +94,7 @@ Reporter.countDailyReporters = function (result) {
 
 // weekly reporters
 Reporter.weeklyReporterz = function (result) {
-  dbConn.query("select * from reporters where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+  dbConn.query("select * from reporters where week(datetime)=week(now()))", function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -106,7 +107,7 @@ Reporter.weeklyReporterz = function (result) {
   };
   // counting weekly reporters
   Reporter.countWeeklyReporters = function (result) {
-    dbConn.query("SELECT COUNT(id) AS countweekly_reporters FROM reporters where  `datetime` >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)", function (err, res) {
+    dbConn.query("SELECT COUNT(id) AS total FROM reporters where week(datetime)=week(now())", function (err, res) {
       if(err) {
        console.log("error: ", err);
       result(null, err);
@@ -133,7 +134,7 @@ Reporter.monthlyReporterz = function (result) {
   };
 // counting monthly reporters
 Reporter.countMonthlyReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS countmonthly_reporters FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  dbConn.query("SELECT COUNT(id) AS total FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -146,7 +147,7 @@ Reporter.countMonthlyReporters = function (result) {
   };
 
 Reporter.update = function(id, Reporter, result){
-dbConn.query("UPDATE reporters SET first_name=?,last_name=?,email=?,sex=?,phone_number=? WHERE id = ?", [Reporter.first_name,Reporter.last_name,Reporter.email,Reporter.sex,Reporter.phone_number, id], function (err, res) {
+dbConn.query("UPDATE reporters SET firstName=?,lastName=?,email=?,sex=?,phoneNumber=? WHERE id = ?", [Reporter.firstName,Reporter.lastName,Reporter.email,Reporter.sex,Reporter.phoneNumber, id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -155,6 +156,19 @@ if(err) {
 }
 });
 };
+
+// updating Unread to Read
+Reporter.updateById = function (id, result) {
+  dbConn.query("update reporters set status = 'Read' where id = ? ", id, function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(err, null);
+  }
+  else{
+    result(null, res);
+  } 
+  });
+  };
 
 Reporter.delete = function(id, result){
 dbConn.query("DELETE FROM reporters WHERE id = ?", [id], function (err, res) {
