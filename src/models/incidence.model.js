@@ -7,6 +7,7 @@ var Incidence = function(incidence){
   this.cordinates          = incidence.cordinates;
   this.byWho          = incidence.byWho;
   this.toWhom         = incidence.toWhom;
+  this.details       = incidence.details;
   this.status        = 'UnRead'
   // this.details         = incidence.details
 

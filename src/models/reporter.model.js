@@ -94,8 +94,8 @@ Reporter.countDailyReporters = function (result) {
 
 // weekly reporters
 Reporter.weeklyReporterz = function (result) {
-  dbConn.query("select * from reporters where week(datetime)=week(now()))", function (err, res) {
-  if(err) {
+  dbConn.query("select * from reporters where week(datetime)=week(now())", function (err, res) { 
+    if(err) {
     console.log("error: ", err);
     result(null, err);
   }
