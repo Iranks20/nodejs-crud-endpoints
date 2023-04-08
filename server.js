@@ -21,10 +21,15 @@ app.use(cors())
 // app.use(cors({
 //     origin: ['https://www.section.io', 'https://www.google.com/']
 // }));
-app.get('/', (req, res) => {
+app.get('/api/v3/signup', (req, res) => {
   res.send("Hello World");
   
 });
+// user signup with jwt
+const authRoutes = require('./src/routes/auth.routes')
+app.use('/api/v3', authRoutes)
+
+
 // Require incidence routes
 const incidenceRoutes = require('./src/routes/incidence.routes')
 // using as middleware
@@ -43,7 +48,6 @@ app.use('/api/v1/login', loginRoutes)
 const usersRoutes = require('./src/routes/users.routes')
 // // using as middleware
 app.use('/api/v2/users', usersRoutes)
-
 
 // listen for requests
 app.listen(port, () => {
