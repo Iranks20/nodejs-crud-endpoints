@@ -9,10 +9,10 @@ const mailer = require('../../config/mailer');
 // exports.create = function(req, res) {
   // const new_incidence = new Incidence(req.body);
 exports.signup = function(req, res) {
-  const { name, email, password } = req.body;
+  const { name, email, phoneNumber, password, company, position, nationality } = req.body;
 
   // Check if user already exists
-  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+  db.query('SELECT * FROM userss WHERE email = ?', [email], (err, results) => {
     if (err) {
       console.error('Error querying database: ', err);
       return res.status(500).json({ message: 'Internal server error' });
@@ -32,7 +32,7 @@ exports.signup = function(req, res) {
     Status = 'active'
 
       // Insert the new user into the database
-      db.query('INSERT INTO users (name, email, password, Status) VALUES (?, ?, ?, ?)', [name, email, hashedPassword, Status], (err, results) => {
+      db.query('INSERT INTO userss (name, email, phoneNumber, password, company, position, nationality, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [name, email, phoneNumber, hashedPassword, company, position, nationality, Status], (err, results) => {
         if (err) {
           console.error('Error inserting user into database: ', err);
           return res.status(500).json({ message: 'Internal server error' });
@@ -98,7 +98,7 @@ exports.sendOtp = function(req, res) {
       userModel.updateOtp(email, otp, (err) => {
         if (err) return res.status(500).json({ error: err });
 
-      userModel.updateStatus(user.id, 'pending', (err) => {
+      userModel.updateStatus(email, 'pending', (err) => {
         if (err) return res.status(500).json({ error: err });
 
       return res.status(200).json({ message: 'OTP sent to your email' });
@@ -122,10 +122,13 @@ exports.verifyOtp = function(req, res) {
       if (user.otp !== otp) {
         return res.status(400).json({ error: 'Invalid OTP' });
       }
-      
+
+      userModel.updateStatus(email, 'waiting', (err) => {
+     
         if (err) return res.status(500).json({ error: err });
         return res.status(200).json({ message: 'OTP verified comtinue' });
       });
+    });
 }
 
 // update password
@@ -135,12 +138,18 @@ exports.updatePassword = function(req, res) {
   userModel.getByEmail(email, (err, user) => {
     if (err) return res.status(500).json({ error: err });
 
+    if (user.Status !== 'waiting') {
+      return res.status(400).json({ error: 'Invaliid request' });
+    }
+
     const hash = bcrypt.hashSync(password, 10);
 
     userModel.updatePassword(user.id, hash, (err) => {
+      userModel.updateStatus(email, 'active', (err) => {
       if (err) return res.status(500).json({ error: err });
 
       return res.status(200).json({ message: 'Password updated successfully' });
+      });
     });
   });
 }

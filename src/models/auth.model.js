@@ -1,7 +1,7 @@
 const db = require('../../config/db.config');
 
 function getUserByEmail(email, callback) {
-  const query = 'SELECT * FROM users WHERE email = ?';
+  const query = 'SELECT * FROM userss WHERE email = ?';
   db.query(query, [email], (err, results) => {
     if (err) {
       return callback(err);
@@ -13,7 +13,7 @@ function getUserByEmail(email, callback) {
 
 // forgot password
 function getByEmail(email, callback) {
-  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+  db.query('SELECT * FROM userss WHERE email = ?', [email], (err, results) => {
     if (err) return callback(err, null);
     if (results.length === 0) return callback('User not found', null);
     return callback(null, results[0]);
@@ -27,14 +27,14 @@ function getByEmail(email, callback) {
 // }
 
 function updateOtp (email, otp, callback) {
-  db.query('UPDATE users SET otp = ? WHERE email = ?', [otp, email], (err) => {
+  db.query('UPDATE userss SET otp = ? WHERE email = ?', [otp, email], (err) => {
     if (err) return callback(err);
     return callback(null);
   });
 }
 
-function updateStatus (id, Status, callback) {
-  db.query('UPDATE users SET Status = ? WHERE id = ?', [Status, id], (err) => {
+function updateStatus (email, Status, callback) {
+  db.query('UPDATE userss SET Status = ? WHERE email = ?', [Status, email], (err) => {
     if (err) return callback(err);
     return callback(null);
   });
@@ -42,7 +42,7 @@ function updateStatus (id, Status, callback) {
 
 // update password
 function updatePassword (id, password, callback) {
-  db.query('UPDATE users SET password = ? WHERE id = ?', [password, id], (err) => {
+  db.query('UPDATE userss SET password = ? WHERE id = ?', [password, id], (err) => {
     if (err) return callback(err);
     return callback(null);
   });
