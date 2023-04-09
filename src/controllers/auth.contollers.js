@@ -79,7 +79,7 @@ exports.sendOtp = function(req, res) {
   const { email } = req.body;
 
   userModel.getByEmail(email, (err, user) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) return res.status(500).json({ error: err, status: 500 });
 
     // Generate OTP
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -99,9 +99,9 @@ exports.sendOtp = function(req, res) {
         if (err) return res.status(500).json({ error: err });
 
       userModel.updateStatus(email, 'pending', (err) => {
-        if (err) return res.status(500).json({ error: err });
+        if (err) return res.status(500).json({ error: err, status: 500 });
 
-      return res.status(200).json({ message: 'OTP sent to your email' });
+      return res.status(200).json({ message: 'OTP sent to your email', status: 200 });
     });
     });
     });
