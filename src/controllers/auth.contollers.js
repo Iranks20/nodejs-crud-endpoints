@@ -19,6 +19,7 @@ exports.signup = function(req, res) {
     }
 
     if (results.length > 0) {
+      console.log('user exists')
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -30,9 +31,10 @@ exports.signup = function(req, res) {
       }
 
     Status = 'active'
+    otp = "0000"
 
       // Insert the new user into the database
-      db.query('INSERT INTO userss (name, email, phoneNumber, password, company, position, nationality, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [name, email, phoneNumber, hashedPassword, company, position, nationality, Status], (err, results) => {
+      db.query('INSERT INTO userss (name, email, phoneNumber, password, company, position, nationality, otp, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [name, email, phoneNumber, hashedPassword, company, position, nationality, Status, otp], (err, results) => {
         if (err) {
           console.error('Error inserting user into database: ', err);
           return res.status(500).json({ message: 'Internal server error' });
@@ -41,7 +43,7 @@ exports.signup = function(req, res) {
         // Create a JWT token
         const token = jwt.sign({ email }, 'mysecretkey', { expiresIn: '1h' });
 
-        return res.status(201).json({ message: 'User created successfully', token });
+        return res.status(201).json({ error: false, message: 'User created successfully', status: 200 });
       });
     });
   });
