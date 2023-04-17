@@ -62,6 +62,10 @@ exports.login = function(req, res) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    if (user.Status !== 'active') {
+      return res.status(400).json({ error: 'Invalidd request' });
+    }
+
     bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Internal server error' });
