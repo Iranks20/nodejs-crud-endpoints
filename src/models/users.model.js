@@ -49,15 +49,24 @@ else{
 };
 
 // updating users
-Users.update = function(id, Users, result){
-dbConn.query("UPDATE userss SET name=?,email=?,phoneNumber=?,password=?,company=?,position=?,nationality=? WHERE id = ?", [Users.name,Users.email,Users.phoneNumber,Users.password,Users.company,Users.position,Users.nationality, id], function (err, res) {
-if(err) {
-    console.log("error: ", err);
-    result(null, err);
-}else{
-    result(null, res);
-}
-});
+Users.update = function(id, Users, result) {
+  dbConn.query("SELECT * FROM userss WHERE id = ?", [id], function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+    } else if (res.length === 0) {
+      result({ message: 'User not found' }, null);
+    } else {
+      dbConn.query("UPDATE userss SET name=?, email=?, phoneNumber=?, company=?, position=?, nationality=? WHERE id=?", [Users.name, Users.email, Users.phoneNumber, Users.company, Users.position, Users.nationality, id], function (err, res) {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+        } else {
+          result(null, res);
+        }
+      });
+    }
+  });
 };
 
 // deleting users

@@ -30,16 +30,24 @@ Users.findById(req.params.id, function(err, users) {
   res.json(users);
 });
 };
+
+// updating the user data using id
 exports.update = function(req, res) {
   if(req.body.constructor === Object && Object.keys(req.body).length === 0){
     res.status(400).send({ error:true, message: 'Please provide all required field' });
-  }else{
+  } else {
+    console.log('Data entered by user:', req.body); // logging the data entered by the user
     Users.update(req.params.id, new Users(req.body), function(err, users) {
-   if (err)
-   res.send(err);
-   res.json({ error:false, message: 'admin user successfully updated' });
-});
-}
+      if (err && err.message === 'User not found') {
+        res.status(404).send({ error:true, message: 'User not found' });
+      } else if (err) {
+        res.send(err);
+      } else {
+        res.json({ error:false, message: 'admin user successfully updated' });
+        console.log(res);
+      }
+    });
+  }
 };
 exports.delete = function(req, res) {
 Users.delete( req.params.id, function(err, users) {
