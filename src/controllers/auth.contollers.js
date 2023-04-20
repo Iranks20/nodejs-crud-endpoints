@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../../config/db.config');
+const pool = require('../../config/db.config');
 const userModel = require('../models/auth.model');
 // const User = require('../models/User');
 const mailer = require('../../config/mailer');
@@ -12,11 +12,12 @@ exports.signup = function(req, res) {
   const { name, email, phoneNumber, password, company, position, nationality } = req.body;
 
   // Check if user already exists
-  db.query('SELECT * FROM userss WHERE email = ?', [email], (err, results) => {
+  pool.query('SELECT * FROM userss WHERE email = ?', [email], (err, results) => {
     if (err) {
       console.error('Error querying database: ', err);
       return res.status(500).json({ message: 'Internal server error' });
     }
+    // connection.release();
 
     if (results.length > 0) {
       console.log('user exists')
@@ -34,11 +35,12 @@ exports.signup = function(req, res) {
     otp = "0000"
 
       // Insert the new user into the database
-      db.query('INSERT INTO userss (name, email, phoneNumber, password, company, position, nationality, otp, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [name, email, phoneNumber, hashedPassword, company, position, nationality, Status, otp], (err, results) => {
+      pool.query('INSERT INTO userss (name, email, phoneNumber, password, company, position, nationality, otp, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [name, email, phoneNumber, hashedPassword, company, position, nationality, otp, Status], (err, results) => {
         if (err) {
           console.error('Error inserting user into database: ', err);
           return res.status(500).json({ message: 'Internal server error' });
         }
+        // connection.release();
 
         // Create a JWT token
         const token = jwt.sign({ email }, 'mysecretkey', { expiresIn: '1h' });

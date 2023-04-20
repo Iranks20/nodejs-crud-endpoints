@@ -1,5 +1,5 @@
 'use strict';
-var dbConn = require('../../config/db.config');
+var pool = require('../../config/db.config');
 //Incidence object create
 var Incidence = function(incidence){
   this.incident     = incidence.incident;
@@ -13,7 +13,7 @@ var Incidence = function(incidence){
 
 };
 Incidence.create = function (newRep, result) {
-dbConn.query("INSERT INTO incidences set ?", newRep, function (err, res) {
+pool.query("INSERT INTO incidences set ?", newRep, function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(err, null);
@@ -22,23 +22,25 @@ else{
   console.log(res.insertId);
   result(null, res.insertId);
 }
+// connection.release();
 });
 };
 Incidence.findById = function (id, result) {
-dbConn.query("Select * from incidences where id = ? ", id, function (err, res) {
+pool.query("Select * from incidences where id = ? ", id, function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(err, null);
 }
 else{
   result(null, res);
-} 
+}
+// connection.release();
 });
 };
 
 // all incidences
 Incidence.findAll = function (result) {
-dbConn.query("Select * from incidences", function (err, res) {
+pool.query("Select * from incidences", function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -47,12 +49,13 @@ else{
   console.log('incidences : ', res);
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // count of all incidences
 Incidence.findAllCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM incidences;", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM incidences;", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -61,12 +64,13 @@ Incidence.findAllCounts = function (result) {
      console.log('incidencessss : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 // dialy incidences
 Incidence.dailyIncident = function (result) {
-  dbConn.query("SELECT * FROM `incidences` WHERE datetime >= curdate()", function (err, res) { 
+  pool.query("SELECT * FROM `incidences` WHERE datetime >= curdate()", function (err, res) { 
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -75,12 +79,13 @@ else{
   console.log('incidences : ', res);
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // counting daily incidences
 Incidence.dailyIncidentCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM incidences WHERE datetime >= curdate();", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM incidences WHERE datetime >= curdate();", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -89,12 +94,13 @@ Incidence.dailyIncidentCounts = function (result) {
      console.log('incidencessss : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 // weekly incidences
 Incidence.weeklyIncident = function (result) {
-  dbConn.query("select * from incidences where week(datetime)=week(now())", function (err, res) { 
+  pool.query("select * from incidences where week(datetime)=week(now())", function (err, res) { 
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -103,12 +109,13 @@ else{
   console.log('incidences : ', res);
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // counting weekly incidence
 Incidence.weeklyIncidentCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM incidences where week(datetime)=week(now())", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM incidences where week(datetime)=week(now())", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -117,13 +124,14 @@ Incidence.weeklyIncidentCounts = function (result) {
      console.log('incidence : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 // monthly incidence
 Incidence.monthlyIncident = function (result) {
-  dbConn.query("SELECT * FROM `incidences` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) { 
-// dbConn.query("Select * from incidences", function (err, res) {
+  pool.query("SELECT * FROM `incidences` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) { 
+// pool.query("Select * from incidences", function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -132,12 +140,13 @@ else{
   console.log('incidences : ', res);
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // monthly incident count
 Incidence.monthlyIncidentCounts = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM incidences WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM incidences WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -146,38 +155,41 @@ Incidence.monthlyIncidentCounts = function (result) {
      console.log('incidence : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 // incidence record end
 
 Incidence.update = function(id, incidence, result){
-dbConn.query("UPDATE incidences SET incident=?,location=?,cordinates=?,byWho=?,toWhom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.byWho,incidence.toWhom,incidence.details, id], function (err, res) {
+pool.query("UPDATE incidences SET incident=?,location=?,cordinates=?,byWho=?,toWhom=?,details=? WHERE id = ?", [incidence.incident,incidence.location,incidence.cordinates,incidence.byWho,incidence.toWhom,incidence.details, id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
 }else{
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // updating Unread to Read
 Incidence.updateById = function (id, result) {
-  dbConn.query("update incidences set status = 'Read' where id = ? ", id, function (err, res) {
+  pool.query("update incidences set status = 'Read' where id = ? ", id, function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(err, null);
   }
   else{
     result(null, res);
-  } 
+  }
+  // connection.release();
   });
   };
 
 Incidence.delete = function(id, result){
-// dbConn.query("DELETE FROM incidences WHERE id = ?", [id], function (err, res) {
-dbConn.query("DELETE a.*, b.* FROM incidences as a, reporters as b WHERE a.id = b.id AND a.id = ?;", [id], function (err, res) {
+// pool.query("DELETE FROM incidences WHERE id = ?", [id], function (err, res) {
+pool.query("DELETE a.*, b.* FROM incidences as a, reporters as b WHERE a.id = b.id AND a.id = ?;", [id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -185,6 +197,7 @@ if(err) {
 else{
   result(null, res);
 }
+// connection.release();
 });
 };
 

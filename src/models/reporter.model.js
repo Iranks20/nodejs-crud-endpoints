@@ -1,5 +1,5 @@
 'use strict';
-var dbConn = require('./../../config/db.config');
+var pool = require('./../../config/db.config');
 //Reporter object create
 var Reporter = function(reporter){
     this.firstName     = reporter.firstName;
@@ -12,7 +12,7 @@ var Reporter = function(reporter){
 };
 // create report
 Reporter.create = function (newEmp, result) {
-dbConn.query("INSERT INTO reporters set ?", newEmp, function (err, res) {
+pool.query("INSERT INTO reporters set ?", newEmp, function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(err, null);
@@ -21,12 +21,13 @@ else{
   console.log(res.insertId);
   result(null, res.insertId);
 }
+// connection.release();
 });
 };
 
 // find report by id
 Reporter.findById = function (id, result) {
-dbConn.query("Select * from logins where id = ? ", id, function (err, res) {
+pool.query("Select * from logins where id = ? ", id, function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(err, null);
@@ -34,12 +35,13 @@ if(err) {
 else{
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // find all reports
 Reporter.findAll = function (result) {
-dbConn.query("Select * from reporters", function (err, res) {
+pool.query("Select * from reporters", function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -48,12 +50,13 @@ else{
   console.log('reporters : ', res);
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // counting all reports
 Reporter.countAllReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM reporters;", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM reporters;", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -62,12 +65,13 @@ Reporter.countAllReporters = function (result) {
      console.log('incidencessss : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 // daily reporters
 Reporter.dailyReporterz = function (result) {
-  dbConn.query("SELECT * FROM `reporters` WHERE datetime >= curdate()", function (err, res) {
+  pool.query("SELECT * FROM `reporters` WHERE datetime >= curdate()", function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -76,11 +80,12 @@ Reporter.dailyReporterz = function (result) {
     console.log('reporters : ', res);
     result(null, res);
   }
+  // connection.release();
   });
   };
 // counting daily reports
 Reporter.countDailyReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM reporters WHERE datetime >= curdate()", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM reporters WHERE datetime >= curdate()", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -89,12 +94,13 @@ Reporter.countDailyReporters = function (result) {
      console.log('reporters : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 // weekly reporters
 Reporter.weeklyReporterz = function (result) {
-  dbConn.query("select * from reporters where week(datetime)=week(now())", function (err, res) { 
+  pool.query("select * from reporters where week(datetime)=week(now())", function (err, res) { 
     if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -103,11 +109,12 @@ Reporter.weeklyReporterz = function (result) {
     console.log('reporters : ', res);
     result(null, res);
   }
+  // connection.release();
   });
   };
   // counting weekly reporters
   Reporter.countWeeklyReporters = function (result) {
-    dbConn.query("SELECT COUNT(id) AS total FROM reporters where week(datetime)=week(now())", function (err, res) {
+    pool.query("SELECT COUNT(id) AS total FROM reporters where week(datetime)=week(now())", function (err, res) {
       if(err) {
        console.log("error: ", err);
       result(null, err);
@@ -116,12 +123,13 @@ Reporter.weeklyReporterz = function (result) {
        console.log('reporters : ', JSON.stringify(res));
        result(null, res);
     }
+    // connection.release();
     });
     };
 
 // monthly reporters
 Reporter.monthlyReporterz = function (result) {
-  dbConn.query("SELECT * FROM `reporters` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  pool.query("SELECT * FROM `reporters` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -130,11 +138,12 @@ Reporter.monthlyReporterz = function (result) {
     console.log('reporters : ', res);
     result(null, res);
   }
+  // connection.release();
   });
   };
 // counting monthly reporters
 Reporter.countMonthlyReporters = function (result) {
-  dbConn.query("SELECT COUNT(id) AS total FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -143,35 +152,38 @@ Reporter.countMonthlyReporters = function (result) {
      console.log('reporters : ', JSON.stringify(res));
      result(null, res);
   }
+  // connection.release();
   });
   };
 
 Reporter.update = function(id, Reporter, result){
-dbConn.query("UPDATE reporters SET firstName=?,lastName=?,email=?,sex=?,phoneNumber=? WHERE id = ?", [Reporter.firstName,Reporter.lastName,Reporter.email,Reporter.sex,Reporter.phoneNumber, id], function (err, res) {
+pool.query("UPDATE reporters SET firstName=?,lastName=?,email=?,sex=?,phoneNumber=? WHERE id = ?", [Reporter.firstName,Reporter.lastName,Reporter.email,Reporter.sex,Reporter.phoneNumber, id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
 }else{
   result(null, res);
 }
+// connection.release();
 });
 };
 
 // updating Unread to Read
 Reporter.updateById = function (id, result) {
-  dbConn.query("update reporters set status = 'Read' where id = ? ", id, function (err, res) {
+  pool.query("update reporters set status = 'Read' where id = ? ", id, function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(err, null);
   }
   else{
     result(null, res);
-  } 
+  }
+  // connection.release();
   });
   };
 
 Reporter.delete = function(id, result){
-dbConn.query("DELETE FROM reporters WHERE id = ?", [id], function (err, res) {
+pool.query("DELETE FROM reporters WHERE id = ?", [id], function (err, res) {
 if(err) {
   console.log("error: ", err);
   result(null, err);
@@ -179,6 +191,7 @@ if(err) {
 else{
   result(null, res);
 }
+// connection.release();
 });
 };
 
