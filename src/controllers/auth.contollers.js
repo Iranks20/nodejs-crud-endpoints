@@ -83,6 +83,7 @@ exports.login = function(req, res) {
   });
 }
 
+// function for sending otp
 exports.sendOtp = function(req, res) {
   const { email } = req.body;
 

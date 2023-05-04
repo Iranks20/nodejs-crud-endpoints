@@ -1,5 +1,7 @@
 'use strict';
 var pool = require('./../../config/db.config');
+const auth = require('../middlewares/auth');
+const jwt = require('jsonwebtoken');
 //Reporter object create
 var Reporter = function(reporter){
     this.firstName     = reporter.firstName;
@@ -7,37 +9,38 @@ var Reporter = function(reporter){
     this.email          = reporter.email;
     this.sex          = reporter.sex;
     this.phoneNumber   = reporter.phoneNumber;
+    this.password =reporter.password
     this.status      = 'UnRead'
 
 };
 // create report
 Reporter.create = function (newEmp, result) {
-pool.query("INSERT INTO reporters set ?", newEmp, function (err, res) {
-if(err) {
-  console.log("error: ", err);
-  result(err, null);
-}
-else{
-  console.log(res.insertId);
-  result(null, res.insertId);
-}
-// connection.release();
-});
+  pool.query("INSERT INTO reporters set ?", newEmp, function (err, res) {
+      if(err) {
+          console.log("error: ", err);
+          result(err, null);
+      }
+      else {
+          console.log(res.insertId);
+          const token = jwt.sign({ id: res.insertId }, process.env.JWT_SECRET);
+          result(null, { token });
+      }
+  });
 };
 
 // find report by id
-Reporter.findById = function (id, result) {
-pool.query("Select * from logins where id = ? ", id, function (err, res) {
-if(err) {
-  console.log("error: ", err);
-  result(err, null);
-}
-else{
-  result(null, res);
-}
-// connection.release();
-});
-};
+exports.findById = [auth, function(req, res) {
+  const reporterId = req.userId;
+  Reporter.findById(reporterId, function(err, reporter) {
+    if (err) {
+      res.send(err);
+    } else if (!reporter) {
+      res.status(404).json({ error: true, message: 'Reporter not found' });
+    } else {
+      res.json(reporter);
+    }
+  });
+}];
 
 // find all reports
 Reporter.findAll = function (result) {

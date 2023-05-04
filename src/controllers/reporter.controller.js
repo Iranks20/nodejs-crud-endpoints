@@ -1,5 +1,6 @@
 'use strict';
 const Reporter = require('../models/reporter.model');
+const auth = require('../middlewares/auth');
 exports.findAll = function(req, res) {
 Reporter.findAll(function(err, reporter) {
   console.log('controller')
@@ -100,13 +101,18 @@ Reporter.create(new_reporter, function(err, reporter) {
 });
 }
 };
-exports.findById = function(req, res) {
-Reporter.findById(req.params.id, function(err, reporter) {
-  if (err)
-  res.send(err);
-  res.json(reporter);
-});
-};
+exports.findById = [auth, function(req, res) {
+  const reporterId = req.userId;
+  Reporter.findById(reporterId, function(err, reporter) {
+    if (err) {
+      res.send(err);
+    } else if (!reporter) {
+      res.status(404).json({ error: true, message: 'Reporter not found' });
+    } else {
+      res.json(reporter);
+    }
+  });
+}];
 exports.update = function(req, res) {
   if(req.body.constructor === Object && Object.keys(req.body).length === 0){
     res.status(400).send({ error:true, message: 'Please provide all required field' });
