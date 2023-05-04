@@ -1,6 +1,5 @@
 'use strict';
 var pool = require('./../../config/db.config');
-const auth = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
 //Reporter object create
 var Reporter = function(reporter){
@@ -29,18 +28,18 @@ Reporter.create = function (newEmp, result) {
 };
 
 // find report by id
-exports.findById = [auth, function(req, res) {
-  const reporterId = req.userId;
-  Reporter.findById(reporterId, function(err, reporter) {
-    if (err) {
-      res.send(err);
-    } else if (!reporter) {
-      res.status(404).json({ error: true, message: 'Reporter not found' });
-    } else {
-      res.json(reporter);
-    }
-  });
-}];
+Reporter.findById = function (id, result) {
+pool.query("Select * from logins where id = ? ", id, function (err, res) {
+if(err) {
+  console.log("error: ", err);
+  result(err, null);
+}
+else{
+  result(null, res);
+}
+// connection.release();
+});
+};
 
 // find all reports
 Reporter.findAll = function (result) {
