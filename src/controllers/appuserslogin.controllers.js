@@ -33,8 +33,11 @@ exports.appuserslogin = function(req, res) {
         //     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
         //     return res.json({ token });
         // });
+        message = 'successful login'
+        error = false
+        // status = ''
         const token = jwt.sign({ userId: user.id, userPassword: user.email }, keys.JWT_SECRET);
-            return res.json({ token, email });
+            return res.json({ token, email, message, error });
         });
 
     } catch (err) {

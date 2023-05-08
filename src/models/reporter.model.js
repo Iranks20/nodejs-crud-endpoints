@@ -1,6 +1,7 @@
 'use strict';
 var pool = require('./../../config/db.config');
 const jwt = require('jsonwebtoken');
+const keys = require('../../config/key.config');
 //Reporter object create
 var Reporter = function(reporter){
     this.firstName     = reporter.firstName;
@@ -21,7 +22,7 @@ Reporter.create = function (newEmp, result) {
       }
       else {
           console.log(res.insertId);
-          const token = jwt.sign({ id: res.insertId }, process.env.JWT_SECRET);
+          const token = jwt.sign({ id: res.insertId }, keys.JWT_SECRET);
           result(null, { token });
       }
   });
