@@ -1,10 +1,8 @@
 'use strict';
 var pool = require('../../config/db.config');
-const auth = require('../middleware/auth.middleware');
-
 //Incidence object create
 var Incidence = function(incidence){
-  this.reporter_id = incidence.reporter_id
+  this.reporter_id = 20
   this.incident     = incidence.incident;
   this.location      = incidence.location;
   this.cordinates          = incidence.cordinates;
@@ -15,20 +13,19 @@ var Incidence = function(incidence){
   // this.details         = incidence.details
 
 };
-exports.create = [auth, function(req, res) {
-  const new_incidence = new Incidence(req.body);
-  //handles null error
-  if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-    res.status(400).send({ error:true, message: 'Please provide all required field' });
-  } else {
-    new_incidence.reporter_id = req.user.userId; // set reporter_id to the userId decoded from the JWT token
-    Incidence.create(new_incidence, function(err, incidence) {
-      if (err)
-        res.send(err);
-      res.json({error:false,message:"Thank you for submitting your incidence successfully. A member from our team will get back to you soon!",data:incidence});
-    });
-  }
-}];
+Incidence.create = function (newRep, result) {
+pool.query("INSERT INTO incidences set ?", newRep, function (err, res) {
+if(err) {
+  console.log("error: ", err);
+  result(err, null);
+}
+else{
+  console.log(res.insertId);
+  result(null, res.insertId);
+}
+// connection.release();
+});
+};
 Incidence.findById = function (id, result) {
 pool.query("Select * from incidences where id = ? ", id, function (err, res) {
 if(err) {

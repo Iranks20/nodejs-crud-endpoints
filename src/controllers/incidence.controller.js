@@ -1,7 +1,5 @@
 'use strict';
 const Incidence = require('../models/incidence.model');
-const verifyToken = require('../middleware/auth.middleware');
-
 exports.findAll = function(req, res) {
 Incidence.findAll(function(err, incidence) {
   console.log('controller')
@@ -90,20 +88,19 @@ exports.monthlyIncidentCounts = function(req, res) {
   });
   };
 
-  exports.create = [verifyToken, function(req, res) {
-    const new_incidence = new Incidence(req.body);
-    //handles null error
-    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-      res.status(400).send({ error:true, message: 'Please provide all required field' });
-    }else{
-      new_incidence.reporter_id = req.userId; // set the reporter_id to the user ID from the decoded token
-      Incidence.create(new_incidence, function(err, incidence) {
-        if (err)
-        res.send(err);
-        res.json({error:false,message:"Thank you for submitting yut incidence successfully a memebr from our team will get back to you soon!",data:incidence});
-      });
-    }
-  }];
+exports.create = function(req, res) {
+const new_incidence = new Incidence(req.body);
+//handles null error
+if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+  res.status(400).send({ error:true, message: 'Please provide all required field' });
+}else{
+Incidence.create(new_incidence, function(err, incidence) {
+  if (err)
+  res.send(err);
+  res.json({error:false,message:"Thank you for submitting yut incidence successfully a memebr from our team will get back to you soon!",data:incidence});
+});
+}
+};
 exports.findById = function(req, res) {
 Incidence.findById(req.params.id, function(err, incidence) {
   if (err)
