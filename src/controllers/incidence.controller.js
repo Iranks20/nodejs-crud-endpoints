@@ -88,6 +88,7 @@ exports.monthlyIncidentCounts = function(req, res) {
   });
   };
 
+  // creatting incidence
 exports.create = function(req, res) {
 const new_incidence = new Incidence(req.body);
 //handles null error
@@ -101,6 +102,16 @@ Incidence.create(new_incidence, function(err, incidence) {
 });
 }
 };
+
+// finding incidence by reporter Id
+exports.findByReporterId = function(req, res) {
+Incidence.findByReporterId(req.params.reporterId, function(err, incidence) {
+  if (err)
+  res.send(err);
+  res.json(incidence);
+});
+};
+
 exports.findById = function(req, res) {
 Incidence.findById(req.params.id, function(err, incidence) {
   if (err)

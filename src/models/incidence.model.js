@@ -2,7 +2,7 @@
 var pool = require('../../config/db.config');
 //Incidence object create
 var Incidence = function(incidence){
-  this.reporter_id = 20
+  this.reporterId = 20
   this.incident     = incidence.incident;
   this.location      = incidence.location;
   this.cordinates          = incidence.cordinates;
@@ -26,6 +26,21 @@ else{
 // connection.release();
 });
 };
+
+// incidence by reporter id
+Incidence.findByReporterId = function (reporterId, result) {
+  pool.query("Select * from incidences where reporterId = ? ", reporterId, function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(err, null);
+  }
+  else{
+    result(null, res);
+  }
+  // connection.release();
+  });
+  };
+
 Incidence.findById = function (id, result) {
 pool.query("Select * from incidences where id = ? ", id, function (err, res) {
 if(err) {

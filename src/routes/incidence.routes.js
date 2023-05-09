@@ -32,5 +32,8 @@ router.put('/:id', incidenceController.update);
 // Delete a incidence with id
 router.delete('/:id', incidenceController.delete);
 // updateById
+// retriev incidennces usig reporter id
+router.get('/new/:reporterId', incidenceController.findByReporterId);
+
 router.put('/status/:id', incidenceController.updateById);
 module.exports = router
