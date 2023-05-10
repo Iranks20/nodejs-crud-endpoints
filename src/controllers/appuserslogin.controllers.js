@@ -16,6 +16,7 @@ exports.appuserslogin = function(req, res) {
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+        console.log(user)
     
         // if (user.Status !== 'active') {
         //     return res.status(400).json({ error: 'Invalidd request' });
@@ -35,9 +36,10 @@ exports.appuserslogin = function(req, res) {
         // });
         message = 'successful login'
         error = false
+        userId = user.id
         // status = ''
         const token = jwt.sign({ userId: user.id, userPassword: user.email }, keys.JWT_SECRET);
-            return res.json({ token, email, message, error });
+            return res.json({ token, email, message, error, userId });
         });
 
     } catch (err) {

@@ -2,7 +2,7 @@
 var pool = require('../../config/db.config');
 //Incidence object create
 var Incidence = function(incidence){
-  this.reporterId = 20
+  this.reporterId = incidence.reporterId
   this.incident     = incidence.incident;
   this.location      = incidence.location;
   this.cordinates          = incidence.cordinates;
