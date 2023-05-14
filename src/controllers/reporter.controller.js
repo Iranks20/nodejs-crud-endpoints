@@ -94,9 +94,10 @@ if(req.body.constructor === Object && Object.keys(req.body).length === 0){
   res.status(400).send({ error:true, message: 'Please provide all required field' });
 }else{
 Reporter.create(new_reporter, function(err, reporter) {
+  console.log(new_reporter)
   if (err)
   res.send(err);
-  res.json({error:false,message:"reporter added successfully!",data:reporter});
+  res.json({error:false,message:"reporter added successfully!",username: new_reporter.email, userId:reporter});
 });
 }
 };

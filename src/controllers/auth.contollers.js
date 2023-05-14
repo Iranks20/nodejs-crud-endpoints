@@ -17,8 +17,6 @@ exports.signup = function(req, res) {
       console.error('Error querying database: ', err);
       return res.status(500).json({ message: 'Internal server error' });
     }
-    // connection.release();
-
     if (results.length > 0) {
       console.log('user exists')
       return res.status(400).json({ message: 'User already exists' });
@@ -162,3 +160,4 @@ exports.updatePassword = function(req, res) {
     });
   });
 }
+

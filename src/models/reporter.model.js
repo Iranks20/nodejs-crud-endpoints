@@ -10,7 +10,8 @@ var Reporter = function(reporter){
     this.sex          = reporter.sex;
     this.phoneNumber   = reporter.phoneNumber;
     this.password =reporter.password
-    this.status      = 'UnRead'
+    this.status      = 'Active'
+    this.otp = '0000'
 
 };
 // create report
@@ -21,9 +22,11 @@ Reporter.create = function (newEmp, result) {
           result(err, null);
       }
       else {
+        result(null, res.insertId);
+        // console.log(res)
           console.log(res.insertId);
-          const token = jwt.sign({ id: res.insertId }, keys.JWT_SECRET);
-          result(null, { token });
+          // const token = jwt.sign({ id: res.insertId }, keys.JWT_SECRET);
+          // result(null, { token });
       }
   });
 };
