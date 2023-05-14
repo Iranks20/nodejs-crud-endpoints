@@ -102,7 +102,7 @@ exports.sendOtp = function(req, res) {
         userModel.updateStatus(email, 'waiting', (err) => {
        
           if (err) return res.status(500).json({ error: err });
-          return res.status(200).json({ message: 'OTP verified comtinue' });
+          return res.status(200).json({ message: 'OTP verified continue', status: 200 });
         });
       });
   }
@@ -124,7 +124,7 @@ exports.sendOtp = function(req, res) {
         userModel.updateStatus(email, 'active', (err) => {
         if (err) return res.status(500).json({ error: err });
   
-        return res.status(200).json({ message: 'Password updated successfully' });
+        return res.status(200).json({ message: 'Password updated successfully', status: 200 });
         });
       });
     });
