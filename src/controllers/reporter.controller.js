@@ -107,7 +107,7 @@ exports.create = function (req, res) {
       }
 
       if (existingReporter) {
-        res.status(400).json({ error: true, message: 'Email already exists' });
+        res.status(400).json({ error: true, message: 'Email already exists. Please log in.' });
         return;
       }
 
