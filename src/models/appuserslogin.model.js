@@ -7,7 +7,6 @@ function getUserByEmail(email, callback) {
     if (err) {
       return callback(err);
     }
-    // connection.release();
     callback(null, results[0]);
     console.log(results[0])
   });
@@ -18,7 +17,6 @@ function getByEmail(email, callback) {
   pool.query('SELECT * FROM reporters WHERE email = ?', [email], (err, results) => {
     if (err) return callback(err, null);
     if (results.length === 0) return callback('User not found', null);
-    // connection.release();
     return callback(null, results[0]);
   });
 }

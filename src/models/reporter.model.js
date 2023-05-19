@@ -16,18 +16,30 @@ var Reporter = function(reporter){
 };
 // create report
 Reporter.create = function (newEmp, result) {
-  pool.query("INSERT INTO reporters set ?", newEmp, function (err, res) {
-      if(err) {
-          console.log("error: ", err);
-          result(err, null);
+  pool.query('INSERT INTO reporters SET ?', newEmp, function (err, res) {
+    if (err) {
+      console.log('error: ', err);
+      result(err, null);
+    } else {
+      result(null, res.insertId);
+      console.log(res.insertId);
+    }
+  });
+};
+
+// New function to find a reporter by email
+Reporter.findByEmail = function (email, result) {
+  pool.query('SELECT * FROM reporters WHERE email = ?', email, function (err, res) {
+    if (err) {
+      console.log('error: ', err);
+      result(err, null);
+    } else {
+      if (res.length) {
+        result(null, res[0]);
+      } else {
+        result(null, null);
       }
-      else {
-        result(null, res.insertId);
-        // console.log(res)
-          console.log(res.insertId);
-          // const token = jwt.sign({ id: res.insertId }, keys.JWT_SECRET);
-          // result(null, { token });
-      }
+    }
   });
 };
 

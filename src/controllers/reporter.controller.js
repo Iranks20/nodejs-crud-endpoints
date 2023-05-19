@@ -1,5 +1,10 @@
 'use strict';
 const Reporter = require('../models/reporter.model');
+const bcrypt = require('bcrypt');
+
+
+
+
 exports.findAll = function(req, res) {
 Reporter.findAll(function(err, reporter) {
   console.log('controller')
@@ -87,20 +92,49 @@ exports.countMonthlyReporters = function(req, res) {
   });
   };
 
-exports.create = function(req, res) {
-const new_reporter = new Reporter(req.body);
-//handles null error
-if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-  res.status(400).send({ error:true, message: 'Please provide all required field' });
-}else{
-Reporter.create(new_reporter, function(err, reporter) {
-  console.log(new_reporter)
-  if (err)
-  res.send(err);
-  res.json({error:false,message:"reporter added successfully!",username: new_reporter.email, userId:reporter});
-});
-}
+  // api for creating a reporter
+exports.create = function (req, res) {
+  const new_reporter = new Reporter(req.body);
+  // handles null error
+  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+    res.status(400).send({ error: true, message: 'Please provide all required fields' });
+  } else {
+    // Check if the email already exists
+    Reporter.findByEmail(new_reporter.email, function (err, existingReporter) {
+      if (err) {
+        res.send(err);
+        return;
+      }
+
+      if (existingReporter) {
+        res.status(400).json({ error: true, message: 'Email already exists' });
+        return;
+      }
+
+      // Encrypt the password
+      bcrypt.hash(new_reporter.password, 10, function (err, hashedPassword) {
+        if (err) {
+          res.send(err);
+          return;
+        }
+
+        // Set the encrypted password
+        new_reporter.password = hashedPassword;
+
+        // Create the new reporter if the email doesn't exist
+        Reporter.create(new_reporter, function (err, reporterId) {
+          console.log(new_reporter);
+          if (err) {
+            res.send(err);
+            return;
+          }
+          res.json({ error: false, message: 'Reporter added successfully!', username: new_reporter.email, userId: reporterId });
+        });
+      });
+    });
+  }
 };
+
 exports.findById = function(req, res) {
 Reporter.findById(req.params.id, function(err, reporter) {
   if (err)

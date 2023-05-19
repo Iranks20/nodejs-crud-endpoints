@@ -7,48 +7,45 @@ const mailer = require('../../config/mailer');
 
 
 // login
-exports.appuserslogin = function(req, res) {
-    const { email, password, sex} = req.body;
-    try {
-        userModel.getUserByEmail(email, (err, user) => {
-        if (err) {
-            return res.status(500).json({ error: 'Internal server error111111' });
-        }
-    
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-        console.log(user)
-    
-        // if (user.Status !== 'active') {
-        //     return res.status(400).json({ error: 'Invalidd request' });
-        // }
-    
-        // bcrypt.compare(password, user.password, (err, result) => {
-        //     if (err) {
-        //     return res.status(500).json({ error: 'Internal server error' });
-        //     }
-    
-        //     if (!result) {
-        //     return res.status(401).json({ error: 'Invalid credentials' });
-        //     }
-    
-        //     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-        //     return res.json({ token });
-        // });
-        message = 'successful login'
-        error = false
-        userId = user.id
-        // status = ''
-        const token = jwt.sign({ userId: user.id, userPassword: user.email }, keys.JWT_SECRET);
-            return res.json({ token, email, message, error, userId });
-        });
 
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-}
+exports.appuserslogin = function(req, res) {
+  const { email, password } = req.body;
+  console.log(password)
+  try {
+    userModel.getUserByEmail(email, (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      // Check if user status is active
+      if (user.Status !== 'Active') {
+        return res.status(401).json({ error: 'Account is not Active' });
+      }
+
+      // Encrypt the password entered by the user
+      bcrypt.compare(password, user.password, (compareErr, isMatch) => {
+        if (compareErr) {
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (!isMatch) {
+          return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        // console.log(user);
+        const token = jwt.sign({ userId: user.id, userPassword: user.email }, keys.JWT_SECRET);
+        return res.json({ token, email, message: 'Successful login', error: false, userId: user.id });
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 // function for sending otp
 exports.sendOtp = function(req, res) {
@@ -110,23 +107,31 @@ exports.sendOtp = function(req, res) {
   // update password
   exports.updatePassword = function(req, res) {
     const { email, password } = req.body;
-  
+
     userModel.getByEmail(email, (err, user) => {
       if (err) return res.status(500).json({ error: err });
-  
+
       if (user.Status !== 'waiting') {
-        return res.status(400).json({ error: 'Invaliid request' });
+        return res.status(400).json({ error: 'Invalid request' });
       }
-  
-      const hash = bcrypt.hashSync(password, 10);
-  
-      userModel.updatePassword(user.id, hash, (err) => {
-        userModel.updateStatus(email, 'active', (err) => {
-        if (err) return res.status(500).json({ error: err });
-  
-        return res.status(200).json({ message: 'Password updated successfully', status: 200 });
+
+      // Encrypt the new password
+      bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
+        if (hashErr) {
+          return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        userModel.updatePassword(user.id, hashedPassword, (updateErr) => {
+          if (updateErr) return res.status(500).json({ error: updateErr });
+
+          userModel.updateStatus(email, 'Active', (statusErr) => {
+            if (statusErr) return res.status(500).json({ error: statusErr });
+
+            return res.status(200).json({ message: 'Password updated successfully', status: 200 });
+          });
         });
       });
     });
-  }
+  };
+
   
