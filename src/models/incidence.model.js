@@ -50,7 +50,6 @@ if(err) {
 else{
   result(null, res);
 }
-// connection.release();
 });
 };
 

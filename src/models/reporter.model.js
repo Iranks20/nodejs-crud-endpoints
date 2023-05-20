@@ -45,17 +45,16 @@ Reporter.findByEmail = function (email, result) {
 
 // find report by id
 Reporter.findById = function (id, result) {
-pool.query("Select * from logins where id = ? ", id, function (err, res) {
-if(err) {
-  console.log("error: ", err);
-  result(err, null);
-}
-else{
-  result(null, res);
-}
-// connection.release();
-});
-};
+  pool.query("Select * from reporters where id = ? ", id, function (err, res) {
+  if(err) {
+    console.log("error: ", err);
+    result(err, null);
+  }
+  else{
+    result(null, res);
+  }
+  });
+  };
 
 // find all reports
 Reporter.findAll = function (result) {
