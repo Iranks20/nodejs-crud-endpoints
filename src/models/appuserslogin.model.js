@@ -12,6 +12,17 @@ function getUserByEmail(email, callback) {
   });
 }
 
+// updating login time
+function updateLoginTime(userId, callback) {
+  const query = 'UPDATE reporters SET logintime = CURRENT_TIMESTAMP WHERE id = ?';
+  pool.query(query, [userId], (err, results) => {
+    if (err) {
+      return callback(err);
+    }
+    callback(null);
+  });
+}
+
 // forgot password
 function getByEmail(email, callback) {
   pool.query('SELECT * FROM reporters WHERE email = ?', [email], (err, results) => {
@@ -54,6 +65,7 @@ function updatePassword (id, password, callback) {
 
 module.exports = {
     getUserByEmail,
+    updateLoginTime,
     getByEmail,
     updatePassword,
     updateOtp,

@@ -88,7 +88,7 @@ Reporter.countAllReporters = function (result) {
 
 // daily reporters
 Reporter.dailyReporterz = function (result) {
-  pool.query("SELECT * FROM `reporters` WHERE datetime >= curdate()", function (err, res) {
+  pool.query("SELECT * FROM `reporters` WHERE logintime >= curdate()", function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -102,7 +102,7 @@ Reporter.dailyReporterz = function (result) {
   };
 // counting daily reports
 Reporter.countDailyReporters = function (result) {
-  pool.query("SELECT COUNT(id) AS total FROM reporters WHERE datetime >= curdate()", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM reporters WHERE logintime >= curdate()", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);
@@ -117,7 +117,7 @@ Reporter.countDailyReporters = function (result) {
 
 // weekly reporters
 Reporter.weeklyReporterz = function (result) {
-  pool.query("select * from reporters where week(datetime)=week(now())", function (err, res) { 
+  pool.query("select * from reporters where week(logintime)=week(now())", function (err, res) { 
     if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -131,7 +131,7 @@ Reporter.weeklyReporterz = function (result) {
   };
   // counting weekly reporters
   Reporter.countWeeklyReporters = function (result) {
-    pool.query("SELECT COUNT(id) AS total FROM reporters where week(datetime)=week(now())", function (err, res) {
+    pool.query("SELECT COUNT(id) AS total FROM reporters where week(logintime)=week(now())", function (err, res) {
       if(err) {
        console.log("error: ", err);
       result(null, err);
@@ -146,7 +146,7 @@ Reporter.weeklyReporterz = function (result) {
 
 // monthly reporters
 Reporter.monthlyReporterz = function (result) {
-  pool.query("SELECT * FROM `reporters` WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  pool.query("SELECT * FROM `reporters` WHERE  logintime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
     console.log("error: ", err);
     result(null, err);
@@ -160,7 +160,7 @@ Reporter.monthlyReporterz = function (result) {
   };
 // counting monthly reporters
 Reporter.countMonthlyReporters = function (result) {
-  pool.query("SELECT COUNT(id) AS total FROM reporters WHERE  datetime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
+  pool.query("SELECT COUNT(id) AS total FROM reporters WHERE  logintime >=  DATE_FORMAT(CURDATE() ,'%Y-%m-01')", function (err, res) {
   if(err) {
      console.log("error: ", err);
     result(null, err);

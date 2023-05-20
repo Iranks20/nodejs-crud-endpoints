@@ -8,44 +8,50 @@ const mailer = require('../../config/mailer');
 
 // login
 
-exports.appuserslogin = function(req, res) {
-  const { email, password } = req.body;
-  console.log(password)
-  try {
-    userModel.getUserByEmail(email, (err, user) => {
-      if (err) {
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-
-      if (!user) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-
-      // Check if user status is active
-      if (user.Status !== 'Active') {
-        return res.status(401).json({ error: 'Account is not Active' });
-      }
-
-      // Encrypt the password entered by the user
-      bcrypt.compare(password, user.password, (compareErr, isMatch) => {
-        if (compareErr) {
+  exports.appuserslogin = function(req, res) {
+    const { email, password } = req.body;
+    console.log(password);
+    try {
+      userModel.getUserByEmail(email, (err, user) => {
+        if (err) {
           return res.status(500).json({ error: 'Internal server error' });
         }
 
-        if (!isMatch) {
-          return res.status(401).json({ error: 'Invalid password' });
+        if (!user) {
+          return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // console.log(user);
-        const token = jwt.sign({ userId: user.id, userPassword: user.email }, keys.JWT_SECRET);
-        return res.json({ token, email, message: 'Successful login', error: false, userId: user.id });
+        // Check if user status is active
+        if (user.Status !== 'Active') {
+          return res.status(401).json({ error: 'Account is not Active' });
+        }
+
+        // Encrypt the password entered by the user
+        bcrypt.compare(password, user.password, (compareErr, isMatch) => {
+          if (compareErr) {
+            return res.status(500).json({ error: 'Internal server error' });
+          }
+
+          if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid password' });
+          }
+
+          // Update the login time for the user
+          userModel.updateLoginTime(user.id, (updateErr) => {
+            if (updateErr) {
+              return res.status(500).json({ error: 'Internal server error' });
+            }
+
+            const token = jwt.sign({ userId: user.id, userPassword: user.email }, keys.JWT_SECRET);
+            return res.json({ token, email, message: 'Successful login', error: false, userId: user.id });
+          });
+        });
       });
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
 
 // function for sending otp
 exports.sendOtp = function(req, res) {
