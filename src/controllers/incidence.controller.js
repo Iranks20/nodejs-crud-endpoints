@@ -90,18 +90,25 @@ exports.monthlyIncidentCounts = function(req, res) {
 
   // creatting incidence
 exports.create = function(req, res) {
-const new_incidence = new Incidence(req.body);
-//handles null error
-if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-  res.status(400).send({ error:true, message: 'Please provide all required field' });
-}else{
-Incidence.create(new_incidence, function(err, incidence) {
-  if (err)
-  res.send(err);
-  res.json({error:false,message:"Thank you for submitting your incidence successfully Go Back to dashbaord and view your incidence status",id:incidence});
-});
-}
-};
+  const new_incidence = new Incidence(req.body);
+
+  // handles null error
+  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+    res.status(400).send({ error: true, message: 'Please provide all required fields' });
+  } else {
+    Incidence.create(new_incidence, function(err, incidence) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.json({
+          error: false,
+          message: 'Thank you for submitting your incidence successfully. Go back to the dashboard to view your incidence status',
+          id: incidence
+        });
+      }
+    });
+  }
+}; 
 
 // finding incidence by reporter Id
 exports.findByReporterId = function(req, res) {
